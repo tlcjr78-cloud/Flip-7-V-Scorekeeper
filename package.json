@@ -1,0 +1,10 @@
+{
+  "name": "flip-v-scorekeeper",
+  "version": "1.0.0",
+  "description": "A modern, browser-based score keeper for Flip & with a Vengeance with player history and card-based scoring.",
+  "private": true,
+  "scripts": {
+    "start": "npx serve ."
+  }
+}
+

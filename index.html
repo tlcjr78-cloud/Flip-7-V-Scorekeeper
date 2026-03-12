@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Flip &amp; with a Vengeance – Scorekeeper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <h1>Flip &amp; with a Vengeance</h1>
+          <p class="subtitle">Beautiful, fast score keeper for your table</p>
+        </div>
+        <div class="header-actions">
+          <button id="newGameButton" class="btn primary">Start New Game</button>
+          <button id="resetAllButton" class="btn subtle" title="Clear all saved data">
+            Reset All
+          </button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel panel-main">
+          <div class="panel-header">
+            <h2>Current Game</h2>
+            <span id="currentGameStatus" class="chip muted">No game in progress</span>
+          </div>
+
+          <div id="gameSetup" class="panel-section">
+            <h3>1. Choose Players</h3>
+            <p class="hint">
+              Pick from saved players or add new ones. You can edit your player list on the right.
+            </p>
+            <div id="availablePlayers" class="chips-list"></div>
+            <p class="hint small">Click a name to toggle them in or out of this game.</p>
+          </div>
+
+          <div id="gameControls" class="panel-section hidden">
+            <h3>2. Rounds &amp; Scores</h3>
+            <div class="rounds-header">
+              <div class="rounds-actions">
+                <button id="addRoundButton" class="btn small primary">Add Round</button>
+                <button id="endGameButton" class="btn small accent">End Game</button>
+              </div>
+              <div class="score-mode-legend">
+                <span class="legend-item">
+                  <span class="legend-swatch manual"></span> Manual entry
+                </span>
+                <span class="legend-item">
+                  <span class="legend-swatch cards"></span> Card-based
+                </span>
+              </div>
+            </div>
+            <div id="roundsContainer" class="rounds-table-wrapper"></div>
+          </div>
+
+          <div id="totalsSection" class="panel-section hidden">
+            <h3>Totals</h3>
+            <div id="totalsContainer" class="totals-grid"></div>
+          </div>
+        </section>
+
+        <section class="side-column">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Players</h2>
+            </div>
+            <div class="panel-section">
+              <form id="addPlayerForm" class="inline-form">
+                <input
+                  id="playerNameInput"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="New player name"
+                  required
+                />
+                <button class="btn primary small" type="submit">Add</button>
+              </form>
+              <p class="hint small">Players are saved on this device for quick reuse.</p>
+              <div id="playersList" class="players-list"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header tabs-header">
+              <h2>History</h2>
+              <div class="tabs">
+                <button
+                  class="tab active"
+                  data-tab-target="gamesHistory"
+                  type="button"
+                >
+                  Games
+                </button>
+                <button
+                  class="tab"
+                  data-tab-target="leaderboard"
+                  type="button"
+                >
+                  Leaderboard
+                </button>
+              </div>
+            </div>
+            <div class="panel-section">
+              <div id="gamesHistory" class="tab-panel active"></div>
+              <div id="leaderboard" class="tab-panel"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Flip 7 Scoring Notes</h2>
+            </div>
+            <div class="panel-section">
+              <p class="hint small">
+                This helper uses the official Flip 7: With a Vengeance scoring:
+                add your number cards, apply ÷2 first if you have it, subtract any -2 to -10
+                modifiers, then add +15 if you completed a Flip 7.
+              </p>
+              <p class="hint small">
+                When you choose card-based scoring in the grid, you can quickly mark which number
+                cards, modifiers, and Flip 7 bonus you had, and the app will compute that round's
+                score for you.
+              </p>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <!-- Card picker dialog -->
+    <div id="cardPickerOverlay" class="overlay hidden" aria-hidden="true">
+      <div class="overlay-backdrop"></div>
+      <div class="overlay-content" role="dialog" aria-modal="true">
+        <div class="overlay-header">
+          <h2 id="cardPickerTitle">Pick cards</h2>
+          <button id="closeCardPicker" class="icon-button" type="button" aria-label="Close">
+            ✕
+          </button>
+        </div>
+        <div class="overlay-body">
+          <div class="card-picker-layout">
+            <div class="card-grid" id="cardGrid"></div>
+            <div class="card-summary">
+              <h3>Selected</h3>
+              <div id="selectedCardsList" class="selected-cards"></div>
+              <div class="summary-row">
+                <span>Total score</span>
+                <span id="selectedCardsTotal" class="summary-total">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="overlay-footer">
+          <button id="clearCardSelection" class="btn subtle small" type="button">
+            Clear
+          </button>
+          <button id="applyCardSelection" class="btn primary small" type="button">
+            Use These Cards
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <template id="toastTemplate">
+      <div class="toast">
+        <span class="toast-message"></span>
+      </div>
+    </template>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Use plain script so it works in older browsers as well -->
+    <script src="app.js"></script>
+  </body>
+</html>
