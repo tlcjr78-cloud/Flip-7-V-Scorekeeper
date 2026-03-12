@@ -1,6 +1,7 @@
 const STORAGE_KEYS = {
   players: "flipv_players",
   games: "flipv_games",
+  currentGame: "flipv_current_game",
 };
 
 // Flip 7: With a Vengeance scoring model
@@ -99,6 +100,10 @@ function showToast(message, duration = 1600) {
 function loadInitialState() {
   state.players = loadFromStorage(STORAGE_KEYS.players, []);
   state.games = loadFromStorage(STORAGE_KEYS.games, []);
+  const savedCurrent = loadFromStorage(STORAGE_KEYS.currentGame, null);
+  if (savedCurrent && savedCurrent.id && Array.isArray(savedCurrent.playerIds) && Array.isArray(savedCurrent.rounds)) {
+    state.currentGame = savedCurrent;
+  }
 }
 
 function persistPlayers() {
@@ -107,6 +112,14 @@ function persistPlayers() {
 
 function persistGames() {
   saveToStorage(STORAGE_KEYS.games, state.games);
+}
+
+function persistCurrentGame() {
+  if (!state.currentGame) {
+    window.localStorage.removeItem(STORAGE_KEYS.currentGame);
+    return;
+  }
+  saveToStorage(STORAGE_KEYS.currentGame, state.currentGame);
 }
 
 function sortPlayersByName(players) {
@@ -237,6 +250,7 @@ function deletePlayer(id) {
       delete round.scores[id];
     }
   }
+  persistCurrentGame();
   render();
   showToast("Player removed");
 }
@@ -305,6 +319,7 @@ function togglePlayerInCurrentGame(playerId) {
   } else {
     playerIds.splice(idx, 1);
   }
+  persistCurrentGame();
 }
 
 function createRound() {
@@ -317,6 +332,7 @@ function createRound() {
     scores: {},
   };
   game.rounds.push(round);
+  persistCurrentGame();
 }
 
 function deleteRound(roundId) {
@@ -327,6 +343,7 @@ function deleteRound(roundId) {
   state.currentGame.rounds.forEach((r, i) => {
     r.number = i + 1;
   });
+  persistCurrentGame();
 }
 
 function setScore(roundId, playerId, mode, value, cards) {
@@ -341,6 +358,7 @@ function setScore(roundId, playerId, mode, value, cards) {
     round.scores[playerId].value = value;
     round.scores[playerId].cards = cards || [];
   }
+  persistCurrentGame();
 }
 
 function renderRounds() {
@@ -954,6 +972,7 @@ function attachEvents() {
       playerIds: [],
       rounds: [],
     };
+    persistCurrentGame();
     render();
   });
 
@@ -965,11 +984,10 @@ function attachEvents() {
     ) {
       window.localStorage.removeItem(STORAGE_KEYS.players);
       window.localStorage.removeItem(STORAGE_KEYS.games);
-      window.localStorage.removeItem(STORAGE_KEYS.scoreConfig);
       state.players = [];
       state.games = [];
       state.currentGame = null;
-      state.scoreConfig = defaultScoreConfig();
+      window.localStorage.removeItem(STORAGE_KEYS.currentGame);
       render();
       showToast("All data cleared");
     }
@@ -1078,6 +1096,7 @@ function finishCurrentGame() {
 
   persistPlayers();
   persistGames();
+  window.localStorage.removeItem(STORAGE_KEYS.currentGame);
 
   render();
   showToast("Game saved to history");

@@ -36,13 +36,14 @@ body {
   background: radial-gradient(circle at top left, #1e293b 0, var(--bg) 55%);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  font-size: 16px; /* slightly larger base for mobile */
 }
 
 .app-shell {
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 20px 40px;
+  padding: 20px 14px 32px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -144,8 +145,8 @@ body {
 .btn {
   border: none;
   border-radius: 999px;
-  padding: 8px 14px;
-  font-size: 13px;
+  padding: 9px 16px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
@@ -159,8 +160,8 @@ body {
 }
 
 .btn.small {
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 7px 12px;
+  font-size: 13px;
 }
 
 .btn.primary {
@@ -198,8 +199,8 @@ input[type="number"] {
   border: 1px solid rgba(55, 65, 81, 0.9);
   background: rgba(15, 23, 42, 0.95);
   color: var(--text);
-  padding: 7px 12px;
-  font-size: 13px;
+  padding: 9px 12px;
+  font-size: 14px;
   outline: none;
   min-width: 0;
 }
@@ -819,21 +820,41 @@ input:focus {
   .side-column {
     order: 2;
   }
+
+  .panel {
+    border-radius: 16px;
+  }
+
+  .rounds-table th,
+  .rounds-table td {
+    padding: 8px 10px;
+  }
+
+  .score-cell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .open-card-picker {
+    margin-top: 4px;
+  }
 }
 
 @media (max-width: 720px) {
   .app-shell {
-    padding: 16px 10px 22px;
+    padding: 14px 10px 22px;
   }
 
   .app-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
   }
 
   .header-actions {
     width: 100%;
     justify-content: flex-start;
+    gap: 8px;
   }
 
   .inline-form {
@@ -846,7 +867,11 @@ input:focus {
 
   .card-picker-layout {
     grid-template-columns: minmax(0, 1fr);
-    max-height: 380px;
+    max-height: 420px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
