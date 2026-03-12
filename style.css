@@ -777,6 +777,7 @@ input:focus {
   flex-direction: column;
   gap: 6px;
   z-index: 40;
+  pointer-events: none; /* let clicks through to buttons underneath */
 }
 
 .toast {
@@ -790,6 +791,8 @@ input:focus {
   align-items: center;
   gap: 6px;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.8);
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
 }
 
 .toast::before {
@@ -798,6 +801,10 @@ input:focus {
   height: 8px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.toast.fade-out {
+  opacity: 0;
 }
 
 @media (max-width: 960px) {

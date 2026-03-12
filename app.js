@@ -79,7 +79,7 @@ function cacheElements() {
   });
 }
 
-function showToast(message, duration = 2200) {
+function showToast(message, duration = 1600) {
   const template = document.getElementById("toastTemplate");
   if (!template) return;
   const nodes = template.content.cloneNode(true);
